@@ -1,0 +1,41 @@
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+
+    <services>
+        <service id="opentracing.logger" class="Corley\Zipkin\Logger\HttpLogger">
+            <argument type="collection">
+                <argument key="host">%opentracing.zipkin%</argument>
+            </argument>
+        </service>
+
+        <service id="opentracing.tracer" class="Corley\Zipkin\Tracer">
+            <argument type="service" id="opentracing.logger"/>
+        </service>
+
+        <service id="opentracing.flow_listener" class="Corley\OpenTracingBundle\EventListener\TraceListener">
+            <argument type="service" id="opentracing.tracer"/>
+            <argument>%opentracing.app_name%</argument>
+            <tag name="kernel.event_listener" event="kernel.request" priority="2048" method="onKernelRequest"/>
+            <tag name="kernel.event_listener" event="kernel.terminate" priority="-2048" method="onKernelTerminate"/>
+            <tag name="kernel.event_listener" event="kernel.exception" priority="2048" method="onKernelException"/>
+        </service>
+
+        <service id="doctrine.dbal.logger" class="Corley\OpenTracingBundle\Logger\Doctrine">
+            <argument type="service" id="opentracing.tracer"/>
+            <argument>%opentracing.app_name%</argument>
+            <argument type="collection">
+                <argument key="host">%database_host%</argument>
+                <argument key="port">%database_port%</argument>
+                <argument key="name">%database_name%</argument>
+                <argument key="user">%database_user%</argument>
+            </argument>
+        </service>
+
+        <service id="opentracing.guzzle.middleware" class="Corley\OpenTracingBundle\Guzzle\TracerMiddlewareFactory">
+            <argument type="service" id="opentracing.tracer"/>
+            <argument>%opentracing.app_name%</argument>
+        </service>
+    </services>
+</container>
