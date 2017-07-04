@@ -28,9 +28,8 @@ class TracerMiddlewareFactory
         $rootSpan = $tracer->findOneBy("kind", "root");
 
         return function (RequestInterface $request, array $options) use ($handler, $rootSpan, $tracer, $endpoint) {
-            $name = strtoupper($request->getMethod()) . ' ' . $request->getUri()->getPath();
 
-            $span = new ClientSend($name, $endpoint);
+            $span = new ClientSend($request->getMethod(), $endpoint);
             $span->setChildOf($rootSpan);
             $tracer->addSpan($span);
 
@@ -42,6 +41,7 @@ class TracerMiddlewareFactory
             $request = $request
                 ->withHeader('X-B3-TraceId', (string) $span::getTraceId())
                 ->withHeader('X-B3-SpanId', (string) $span->getId())
+                ->withHeader('X-B3-ParentSpanId', (string) $span->getParentId())
                 ->withHeader('X-B3-Sampled', "1")
             ;
 

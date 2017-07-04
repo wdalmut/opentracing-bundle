@@ -21,9 +21,22 @@ class TraceListener
 
         $span = new ServerReceive("app", $this->serviceName, ($hostname) ? "{$hostname}:${port}" : null);
 
-        if (!empty($_SERVER['HTTP_X_B3_SPANID'])) {
-            $span->restoreContext($_SERVER['HTTP_X_B3_TRACEID'], $_SERVER['HTTP_X_B3_SPANID']);
+        $traceId = null;
+        if (!empty($_SERVER['HTTP_X_B3_TRACEID'])) {
+            $traceId = $_SERVER['HTTP_X_B3_TRACEID'];
         }
+
+        $spanId = null;
+        if (!empty($_SERVER['HTTP_X_B3_SPANID'])) {
+            $spanId = $_SERVER['HTTP_X_B3_SPANID'];
+        }
+
+        $parentSpanId = null;
+        if (!empty($_SERVER['HTTP_X_B3_PARENTSPANID'])) {
+            $parentSpanId = $_SERVER['HTTP_X_B3_PARENTSPANID'];
+        }
+
+        $span->restoreContext($traceId, $spanId, $parentSpanId);
 
         $span->getBinaryAnnotations()->set("kind", "root");
         $this->tracer->addSpan($span);
