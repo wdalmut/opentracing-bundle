@@ -14,8 +14,8 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode("app_name")->defaultValue("app")->end()
-                ->scalarNode("zipkin")->defaultValue("http://localhost/login")->end()
-                ->scalarNode("send_traces")->defaultValue(false)->end()
+                ->scalarNode("zipkin")->defaultValue("http://localhost:9411")->end()
+                ->scalarNode("send_traces")->defaultValue(true)->end()
             ->end();
 
         return $treeBuilder;

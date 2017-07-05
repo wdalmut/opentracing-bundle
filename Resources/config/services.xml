@@ -10,8 +10,14 @@
             </argument>
         </service>
 
+        <service id="opentracing.noop_logger" class="Corley\Zipkin\Logger\NoopLogger">
+            <argument type="collection">
+                <argument key="host">%opentracing.zipkin%</argument>
+            </argument>
+        </service>
+
         <service id="opentracing.tracer" class="Corley\Zipkin\Tracer">
-            <argument type="service" id="opentracing.logger"/>
+            <argument type="expression">container.getParameter('opentracing.send_traces') == 1 ? service('opentracing.logger') : service('opentracing.noop_logger')</argument>
         </service>
 
         <service id="opentracing.flow_listener" class="Corley\OpenTracingBundle\EventListener\TraceListener">
