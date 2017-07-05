@@ -14,7 +14,20 @@ corley_open_tracing:
     zipkin: "http://192.168.0.5:9411"
 ```
 
-### Symfony DiC
+## Log Doctrine Queries
+
+In your `config_prod` just add:
+
+```yml
+doctrine:
+    dbal:
+        logging: true
+```
+
+## Symfony DiC
+
+Tag your `HandlerStack` as a `corley.auth.guzzle_handler_stack` in other to
+trace down your services calls.
 
 ```
 http.handler:
