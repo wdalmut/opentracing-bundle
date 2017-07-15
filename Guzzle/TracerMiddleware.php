@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface;
 use Corley\Zipkin\Tracer;
 use Corley\Zipkin\ClientSend;
 
-class TracerMiddlewareFactory
+class TracerMiddleware
 {
     private $tracer;
     private $endpoint;
@@ -42,7 +42,7 @@ class TracerMiddlewareFactory
                 ->withHeader('X-B3-TraceId', (string) $span::getTraceId())
                 ->withHeader('X-B3-SpanId', (string) $span->getId())
                 ->withHeader('X-B3-ParentSpanId', (string) $span->getParentId())
-                ->withHeader('X-B3-Sampled', "1")
+                ->withHeader('X-B3-Sampled', (int)$tracer->isSampled())
             ;
 
             return $handler($request, $options)->then(function (ResponseInterface $response) use ($span) {

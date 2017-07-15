@@ -39,7 +39,7 @@
             </argument>
         </service>
 
-        <service id="opentracing.guzzle.middleware" class="Corley\OpenTracingBundle\Guzzle\TracerMiddlewareFactory">
+        <service id="opentracing.guzzle.middleware" class="Corley\OpenTracingBundle\Guzzle\TracerMiddleware">
             <argument type="service" id="opentracing.tracer"/>
             <argument>%opentracing.app_name%</argument>
         </service>
