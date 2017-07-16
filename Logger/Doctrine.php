@@ -2,7 +2,6 @@
 namespace Corley\OpenTracingBundle\Logger;
 
 use Doctrine\DBAL\Logging\SQLLogger;
-
 use Corley\Zipkin\Tracer;
 use Corley\Zipkin\ClientSend;
 
