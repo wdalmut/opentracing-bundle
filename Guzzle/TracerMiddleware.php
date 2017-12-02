@@ -2,10 +2,8 @@
 namespace Corley\OpenTracingBundle\Guzzle;
 
 use GuzzleHttp\Exception\RequestException;
-
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 use Corley\Zipkin\Tracer;
 use Corley\Zipkin\ClientSend;
 
